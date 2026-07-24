@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Simulado de Concursos</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+
+margin:0;
+min-height:100vh;
+padding:20px;
+
+background:linear-gradient(135deg,#2563eb,#06b6d4);
+
+}
+
+
+.container{
+
+max-width:900px;
+margin:auto;
+
+background:white;
+
+padding:30px;
+
+border-radius:20px;
+
+box-shadow:0 10px 30px rgba(0,0,0,.2);
+
+}
+
+
+h1{
+
+text-align:center;
+color:#4338ca;
+
+}
+
+
+.descricao{
+
+text-align:center;
+color:#666;
+
+margin-bottom:25px;
+
+}
+
+
+
+select,button{
+
+width:100%;
+
+padding:14px;
+
+margin-top:15px;
+
+border-radius:10px;
+
+font-size:16px;
+
+}
+
+
+select{
+
+border:2px solid #ddd;
+
+background:#f8fafc;
+
+}
+
+
+
+button{
+
+border:none;
+
+background:#7c3aed;
+
+color:white;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+
+button:hover{
+
+background:#5b21b6;
+
+}
+
+
+
+.questao{
+
+margin-top:20px;
+
+padding:20px;
+
+background:#f1f5f9;
+
+border-radius:15px;
+
+border-left:6px solid #06b6d4;
+
+}
+
+
+
+.questao h3{
+
+color:#1e40af;
+
+}
+
+
+
+.alternativa{
+
+display:block;
+
+background:white;
+
+padding:10px;
+
+margin:8px 0;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+
+
+.alternativa:hover{
+
+background:#dbeafe;
+
+}
+
+
+
+#resultado{
+
+margin-top:25px;
+
+padding:20px;
+
+border-radius:15px;
+
+background:#16a34a;
+
+color:white;
+
+text-align:center;
+
+font-size:22px;
+
+font-weight:bold;
+
+}
+
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>🎓 Simulado de Concursos</h1>
+
+
+<p class="descricao">
+Escolha uma matéria e teste seus conhecimentos.
+</p>
+
+
+
+<select id="materia">
+
+<option value="matematica">
+📐 Matemática
+</option>
+
+<option value="portugues">
+📖 Português
+</option>
+
+<option value="informatica">
+💻 Informática
+</option>
+
+</select>
+
+
+
+<button onclick="gerar()">
+🚀 Gerar Questões
+</button>
+
+
+
+<div id="prova"></div>
+
+
+<div id="resultado"></div>
+
+
+
+</div>
+
+
+
+<script>
+
+
+const banco={
+
+
+matematica:[
+
+{
+p:"Quanto é 25% de 200?",
+a:["25","40","50","75"],
+c:2
+},
+
+{
+p:"Quanto é 9 x 7?",
+a:["56","63","72","81"],
+c:1
+},
+
+{
+p:"Raiz quadrada de 144:",
+a:["10","11","12","14"],
+c:2
+}
+
+],
+
+
+portugues:[
+
+{
+p:"Qual palavra está correta?",
+a:["Excessão","Exceção","Eceção","Excessão"],
+c:1
+},
+
+{
+p:"Plural de cidadão:",
+a:["Cidadões","Cidadãos","Cidadães","Cidadans"],
+c:1
+},
+
+{
+p:"Qual é um pronome?",
+a:["Casa","Ele","Bonito","Correr"],
+c:1
+}
+
+],
+
+
+informatica:[
+
+{
+p:"CPU significa:",
+a:[
+"Central Processing Unit",
+"Computer Personal Unit",
+"Control Program Unit",
+"Central Print Unit"
+],
+c:0
+},
+
+{
+p:"Sistema operacional da Microsoft:",
+a:[
+"Linux",
+"Windows",
+"Android",
+"Mac"
+],
+c:1
+},
+
+{
+p:"Memória temporária do computador:",
+a:[
+"HD",
+"SSD",
+"RAM",
+"DVD"
+],
+c:2
+}
+
+]
+
+
+};
+
+
+
+let perguntas=[];
+
+
+
+function gerar(){
+
+
+let materia=document.getElementById("materia").value;
+
+
+perguntas=banco[materia];
+
+
+let html="";
+
+
+perguntas.forEach((q,i)=>{
+
+
+html+=`
+
+<div class="questao">
+
+<h3>${i+1}) ${q.p}</h3>
+
+
+${q.a.map((x,j)=>`
+
+<label class="alternativa">
+
+<input type="radio" name="q${i}" value="${j}">
+
+${x}
+
+</label>
+
+`).join("")}
+
+
+</div>
+
+`;
+
+
+});
+
+
+html+=`
+
+<button onclick="corrigir()">
+
+✅ Corrigir
+
+</button>
+
+`;
+
+
+document.getElementById("prova").innerHTML=html;
+
+
+document.getElementById("resultado").innerHTML="";
+
+
+}
+
+
+
+
+function corrigir(){
+
+
+let pontos=0;
+
+
+perguntas.forEach((q,i)=>{
+
+
+let resposta=document.querySelector(
+`input[name="q${i}"]:checked`
+);
+
+
+
+if(resposta && Number(resposta.value)==q.c){
+
+pontos++;
+
+}
+
+
+});
+
+
+
+document.getElementById("resultado").innerHTML=
+
+"🏆 Você acertou "+pontos+" de "+perguntas.length+" questões!";
+
+
+}
+
+
+
+</script>
+
+
+</body>
+</html>
